@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "StellarVisionHome";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("Home", "StellarVision", FormMethod.Post))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+
+    <h2>Stellar Vision Home</h2>
+}

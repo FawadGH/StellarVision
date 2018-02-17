@@ -1067,6 +1067,9 @@
     <Content Include="scripts\modernizr.custom.js" />
     <Content Include="scripts\navbar.js" />
     <Content Include="scripts\npm.js" />
+    <Content Include="SQL\Insert-Module.sql" />
+    <Content Include="SQL\Insert-ModuleFunction.sql" />
+    <Content Include="SQL\Insert-UserPermission.sql" />
     <Content Include="Web.config" />
     <Content Include="Views\Shared\_LayoutLogin.cshtml" />
     <Content Include="Views\Shared\_LayoutMain.cshtml" />
@@ -1084,6 +1087,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LogoutController.cs" />
+    <Compile Include="Controllers\StellarVisionController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1115,6 +1119,7 @@
     <Content Include="Views\UserManagement\AddUser.cshtml" />
     <Content Include="Views\UserManagement\ViewUserType.cshtml" />
     <Content Include="Views\UserManagement\ViewUserLevel.cshtml" />
+    <Content Include="Views\StellarVision\Home.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
