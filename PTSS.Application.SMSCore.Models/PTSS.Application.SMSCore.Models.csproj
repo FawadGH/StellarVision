@@ -74,6 +74,7 @@
     <Compile Include="ApplicationWrapper.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ControlHelper.cs" />
+    <Compile Include="FintechAPICommunicator.cs" />
     <Compile Include="LicenseModel.cs" />
     <Compile Include="LoginModel.cs" />
     <Compile Include="MenuItemModel.cs" />
