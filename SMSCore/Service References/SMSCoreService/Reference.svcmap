@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="633696e0-74b1-49b1-bbe1-df62a706584b" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost/SMSCoreService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="SMSCoreService.wsdl" MetadataType="Wsdl" ID="e9563fe2-7d10-4740-bcba-2f5f86d75c73" SourceId="1" SourceUrl="http://localhost/SMSCoreService/SMSCoreService.svc?wsdl" />
+    <MetadataFile FileName="SMSCoreService.xsd" MetadataType="Schema" ID="1166d242-b410-4102-a292-5c6f3c75b3d6" SourceId="1" SourceUrl="http://localhost/SMSCoreService/SMSCoreService.svc?xsd=xsd2" />
+    <MetadataFile FileName="SMSCoreService.disco" MetadataType="Disco" ID="f6574552-ffa6-4111-8d28-91eb28761661" SourceId="1" SourceUrl="http://localhost/SMSCoreService/SMSCoreService.svc?disco" />
+    <MetadataFile FileName="SMSCoreService1.xsd" MetadataType="Schema" ID="00d0f8b8-846d-45f0-871a-ce0c88e4327e" SourceId="1" SourceUrl="http://localhost/SMSCoreService/SMSCoreService.svc?xsd=xsd1" />
+    <MetadataFile FileName="SMSCoreService2.xsd" MetadataType="Schema" ID="a60c9d27-d564-419c-a2ca-8bc80b92501b" SourceId="1" SourceUrl="http://localhost/SMSCoreService/SMSCoreService.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

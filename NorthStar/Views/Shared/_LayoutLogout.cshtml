@@ -1,0 +1,27 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NorthStar</title>
+    <link href="~/Content/Login.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <div class="login-wrap">
+            <div class="login-html">
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked="checked" /><label for="tab-1" class="tab">Logged Out</label>
+                <div class="login-form">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

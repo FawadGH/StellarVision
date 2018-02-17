@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewBag.Title = "Logout";
+    Layout = "~/Views/Shared/_LayoutLogout.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("Index", "Logout", FormMethod.Post))
+{
+    <div class="sign-in-htm">
+        <div class="group">
+            
+        </div>
+        <div class="group">
+            
+        </div>
+        <div class="group">
+            
+        </div>
+        <div class="group">
+            <input type="submit" class="button" value="Go to Login" id="SubmitButtom" />
+            @*<asp:Button ID="btnLogin" runat="server" Text="Sign In" CssClass="button" OnClick="btnLogin_Click" />*@
+        </div>
+        <div class="hr">School Management System - by - PTSS</div>
+        <div class="foot-lnk">
+            
+        </div>
+    </div>
+}

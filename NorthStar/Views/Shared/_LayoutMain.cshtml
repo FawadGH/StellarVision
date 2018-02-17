@@ -1,0 +1,129 @@
+﻿@using PTSS.Application.SMSCore.Models
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NorthStar - @ViewBag.Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+
+    @*CSS REFERENCES--------------------------------------------------*@  
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/AdminLTE.min.css" rel="stylesheet" />
+    <link href="~/Content/skins/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/HorizontalForm.css" rel="stylesheet" />
+    @*----------------------------------------------expanded.pushMenu-------------------*@ 
+</head>
+<body class="hold-transition skin-blue fixed sidebar-mini">
+    @*<form id="form1" runat="server">*@
+        <div class="wrapper">
+            @*<%--HEADER--%>*@
+            
+            @RenderPage("~/Views/Shared/_LayoutMainHeader.cshtml")
+
+            @* Menu *@
+            @RenderPage("~/Views/Shared/_Menu.cshtml")
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper" style="min-height: 946px;">
+                <section class="content-header">
+                    <h1>
+                        @SessionWrapper.MainMenuItemModelList.FirstOrDefault(x => x.isSelected).ModuleName
+                        <small>@SessionWrapper.MainMenuItemModelList.FirstOrDefault(x => x.isSelected).ModuleDescription</small>
+                    </h1>
+                    <ol class="breadcrumb">
+
+                        <li><a href="#"><i class="fa @SessionWrapper.MainMenuItemModelList.FirstOrDefault(x => x.isSelected).ModuleIconClass"></i>@SessionWrapper.MainMenuItemModelList.FirstOrDefault(x => x.isSelected).ModuleName</a></li>
+                        @if (SessionWrapper.MainMenuItemModelList.FirstOrDefault(x => x.isSelected).hasChildItem)
+                        {
+                            <li>
+                                <a href="#">
+                                    <i class="fa @SessionWrapper.ChildMenuItemModelList.FirstOrDefault(x => x.isSelected).ModuleFunctionIconClass"></i>
+                                    @{
+                                        var ModuleFunctionName = SessionWrapper.ChildMenuItemModelList.FirstOrDefault(x => x.isSelected).ModuleFunctionName;
+                                        Write(ModuleFunctionName);
+                                    }
+                                </a>
+                            </li>
+                        }
+                                        @*<li class="active">Abc Function</li>*@
+
+                                        @*<%-- whole label will be a single link unless there is a work around for it, if there isn't i prefer the above idea--%>
+                            <%--
+                            <li><a href="#"><asp:Label ID="Label1" runat="server" CssClass="fa fa-dashboard" Text=" Label> label > label"></asp:Label></a></li>--%>*@
+
+                                    </ol>
+
+                </section>
+                <section class="content">
+                    <!-- Default box -->
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">
+                                @if(SessionWrapper.MainMenuItemModelList.FirstOrDefault(x => x.isSelected).hasChildItem)
+                                {
+                                    var ModuleFunctionName = SessionWrapper.ChildMenuItemModelList.FirstOrDefault(x => x.isSelected).ModuleFunctionName;
+                                    Write(ModuleFunctionName);
+                                }
+                            </h3>
+
+                            @*<%--          <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>--%>*@
+                        </div>
+                        <div class="box-body">
+
+                            @RenderBody()
+
+                        </div>
+                        <!-- /.box-body -->
+                        @*<%--        <div class="box-footer">
+                    Footer
+                </div>--%>*@
+                        <!-- /.box-footer-->
+                    </div>
+                    <!-- /.box -->
+                </section>
+                @*<asp:ContentPlaceHolder ID="MainContent" runat="server">
+                </asp:ContentPlaceHolder>*@
+
+
+            </div>
+        </div>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 1.0
+            </div>
+            <strong>Copyright © 2017-2018</strong> All rights
+            reserved.
+        </footer>
+
+
+        <!-- Control Sidebar -->
+        
+        @*@RenderPage("~/Views/Shared/_LayoutMainSidebarControl.cshtml")*@
+
+    @*</form>*@
+</body>
+
+@*<%-- SCRIPT REFERENCES--------------------------------------------------  --%>*@
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Content/plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="~/Content/plugins/fastclick/fastclick.min.js"></script>
+<script src="~/Scripts/app.min.js"></script>
+<script src="~/Scripts/masterCalls.js"></script>
+<script src="~/Scripts/demo.js"></script>
+@*<%-- ----------------------------------------------------------------- --%>*@
+</html>

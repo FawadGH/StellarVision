@@ -1,0 +1,19 @@
+﻿@model PTSS.Application.SMSCore.Models.MenuItemModel
+@using PTSS.Application.SMSCore.Models
+@{ 
+    string ParentModuleID = Model.ModuleID;
+}
+@foreach (MenuItemModel Child in SessionWrapper.ChildMenuItemModelList)
+{
+    if (ParentModuleID != null)
+    {
+        if (Child.ModuleFunctionName != null && ParentModuleID == Child.ModuleID)
+        {
+            <li>
+                <a href='@Url.Action(Child.ModuleFunctionAction, new { controller = Child.ModuleFunctionController })'>
+                    <i class="fa @Child.ModuleFunctionIconClass"></i><span>@Child.ModuleFunctionName</span>
+                </a>
+            </li>
+        }
+    }
+}

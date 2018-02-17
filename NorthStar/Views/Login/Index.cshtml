@@ -1,0 +1,52 @@
+﻿@model PTSS.Application.SMSCore.Models.LoginModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using(Html.BeginForm("Index", "Login", FormMethod.Post))
+{
+    <div class="sign-in-htm">
+        <div class="group">
+            <label for="user" class="label">Username</label>
+            @{
+                htmlAttributes.Clear();
+                htmlAttributes.Add("class", "input");
+                htmlAttributes.Add("name", "tbLoginID");
+                //htmlAttributes.Add("id", "LoginID");
+                htmlAttributes.Add("type", "text");
+            }
+            @Html.TextBoxFor(x => x.sLoginID, htmlAttributes)
+            @*<input id="user" type="text" class="input" />*@
+            @*<asp:TextBox ID="tbUserID" runat="server" CssClass="input"></asp:TextBox>*@
+        </div>
+        <div class="group">
+            <label for="pass" class="label">Password</label>
+            @{ 
+                htmlAttributes.Clear();
+                htmlAttributes.Add("class", "input");
+                htmlAttributes.Add("name", "tbPassword");
+                //htmlAttributes.Add("id", "Password");
+                htmlAttributes.Add("type", "password");
+                htmlAttributes.Add("data-type", "password");
+            }
+            @Html.TextBoxFor(x => x.sPassword, htmlAttributes)
+            @*<input id="Lpass" type="password" class="input" data-type="password" />*@
+            @*<asp:TextBox ID="tbPassword" runat="server" CssClass="input" TextMode="Password"></asp:TextBox>*@
+        </div>
+        <div class="group">
+            <input id="check" type="checkbox" class="check" checked="checked" />
+            <label for="check"><span class="icon"></span>&nbsp;Keep me Signed in</label>
+        </div>
+        <div class="group">
+            <input type="submit" class="button" value="Sign In" id="SubmitButtom" />
+            @*<asp:Button ID="btnLogin" runat="server" Text="Sign In" CssClass="button" OnClick="btnLogin_Click" />*@
+        </div>
+        <div class="hr">School Management System - by - PTSS</div>
+        <div class="foot-lnk">
+            <a class="ForgotPass" href="#forgot">Forgot Password?</a>
+        </div>
+    </div>
+}
+

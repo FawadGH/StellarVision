@@ -1,0 +1,270 @@
+﻿@model PTSS.Application.SMSCore.Models.UserPermissionsModel
+@using PTSS.Application.SMSCore.Models;
+@using Newtonsoft.Json;
+@{
+    ViewBag.Title = "SetPermissions";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("SetPermissions", "UserManagement", FormMethod.Post))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+    <div class="form-group">
+        <div id="UserTypeDiv">
+            <div class="col-sm-2">
+                <label>User Types</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control margin-bottom");
+                    htmlAttributes.Add("id", "ddlUserType");
+                    htmlAttributes.Add("onchange", "GetUserLevels()");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserTypeSelectList, "Select User Type", htmlAttributes)
+            </div>
+        </div>
+        
+        <div id="UserLevelDiv" class="collapse">
+            <div class="col-sm-2">
+                <label>User Level</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control margin-bottom");
+                    htmlAttributes.Add("id", "ddlUserLevel");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserLevelSelectList, "Select User Level", htmlAttributes)
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <label>Modules</label>
+        </div>
+        <div class="col-sm-9">
+            <ul>
+                @foreach (MenuItemModel Parent in Model.ModulesList)
+                {
+                    if (!Parent.hasChildItem)
+                    {
+                        <!-- Optionally, you can add icons to the links -->
+                        <li><a href='@Url.Action(Parent.ModuleAction, new { controller = Parent.ModuleController })'>
+                        @{
+                            htmlAttributes.Clear();
+                            htmlAttributes.Add("class", "checkbox-inline");
+                            htmlAttributes.Add("onchange", "CheckBoxChanged()");
+                        }
+                        @Html.CheckBox(Parent.ModuleName, htmlAttributes)
+                        <i class="fa @Parent.ModuleIconClass"></i><span>@Parent.ModuleName</span></a></li>
+                    }
+                    else
+                    {
+                        <li class="treeview">
+                            <a href="#">
+                                <!-- Make link here -->
+                                @{
+                                    htmlAttributes.Clear();
+                                    htmlAttributes.Add("class", "checkbox-inline");
+                                    htmlAttributes.Add("onchange", "CheckBoxChanged()");
+                                }
+                                @Html.CheckBox("Parent_" + Parent.ModuleName, htmlAttributes)
+                                <i class="fa @Parent.ModuleIconClass"></i><span>@Parent.ModuleName</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                @{
+                                    foreach (MenuItemModel Child in Parent.ModuleFunctionsList)
+                                    {
+                                        if (Parent.ModuleID != null)
+                                        {
+                                            if (Child.ModuleFunctionName != null && Parent.ModuleID == Child.ModuleID)
+                                            {
+                                                <li>
+                                                    @{
+                                                        htmlAttributes.Clear();
+                                                        htmlAttributes.Add("class", "checkbox-inline");
+                                                        htmlAttributes.Add("onchange", "CheckBoxChanged()");
+                                                    }
+                                                    <a href="#">
+                                                        @Html.CheckBox("Child_Parent_" + Parent.ModuleName + "_" + Child.ModuleFunctionName, htmlAttributes)
+                                                        <i class="fa  @Child.ModuleFunctionIconClass"></i><span>@Child.ModuleFunctionName</span>
+                                                    </a>
+                                                    
+                                                    <a href='@Url.Action(Child.ModuleFunctionAction, new { controller = Child.ModuleFunctionController })'>
+                                                        @*<input type="checkbox" class="checkbox-inline" />*@
+                                                        @*<i class="fa  fa-file"></i><span>@Child.ModuleFunctionName</span>*@
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+        <div class="col-sm-2">
+            <input type="button" class="btn btn-default" value="Set Permissions" onclick="SetPermissions()"/>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function GetUserLevels() {
+        var model = {
+            "UserTypeID":$("#ddlUserType").val()
+            };
+        var URL = '@Url.Action("GetUserLevels", "UserManagement")';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            data: JSON.stringify(model),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    var k = 0;
+                    //alert(JSON.stringify(response.UserLevelList));
+                    $('#ddlUserLevel').html('');
+                    $.each(response.UserLevelList, function (i, UserLevel) {
+                        k = k + 1;
+                        $('#ddlUserLevel').append(
+                            $('<option>Select User Level</option>').val(UserLevel.Value).html(UserLevel.Text));
+                    });
+                    if (k == 0)
+                        $('#UserLevelDiv').hide();
+                    else
+                        $('#UserLevelDiv').show();
+                }
+                else
+                    $('#UserLevelDiv').hide();
+            }
+        });
+    }
+
+    function SetPermissions() {
+        $("#successDiv").hide();
+        $("#errorDiv").hide();
+        var URL = '@Url.Action("SetPermissions","UserManagement")';
+        //var MyModel = @Html.Raw(Json.Encode(Model));
+        var ModulesList =  @Html.Raw(Json.Encode(Model.ModulesList));
+        var model = {
+            "UserTypeID": $("#ddlUserType").val(),
+            "UserLevelID": $("#ddlUserLevel").val(),
+            "ModulesList": ModulesList
+        };
+        //alert(JSON.stringify(model));
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            async: false,
+            url: URL,
+            data: JSON.stringify(model),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.success) {
+                    $("#successDiv").html(response.ResponseMessage);
+                    $("#successDiv").show();
+                }
+                else {
+                    $("#errorDiv").html(response.ResponseMessage);
+                    $("#errorDiv").show();
+                }
+            }
+        });
+    }
+
+    function CheckBoxChanged() {
+        var Parent = "Parent";
+        var Child = "Child";
+        var CheckBoxType = "checkbox";
+        var ParentID;
+        var ParentCount = 0;
+        var Controls = document.getElementsByTagName("input");
+        //Get Number of Parents Checked
+        for (var i = 0; i < Controls.length; i++) {
+            var id = Controls[i].id;
+            if (document.getElementById(id) != null) {
+                if (document.getElementById(id).type == CheckBoxType) {
+                    if (document.getElementById(id).checked == true) {
+                        if (id.indexOf(Parent) !== -1) {
+                            //alert(id);
+                            ParentCount = ParentCount + 1;
+                        }
+                    }
+                }
+            }
+        }
+        //alert(ParentCount);
+        for (var j = 0; j < ParentCount; j++) {
+            for (var i = 0; i < Controls.length; i++) {
+                var id = Controls[i].id;
+                if (document.getElementById(id) != null) {
+                    if (document.getElementById(id).type == CheckBoxType) {
+                        if (document.getElementById(id).checked == true && id.indexOf(Parent) !== -1) {
+                            //alert(id);
+                            ParentID = id;
+                        }
+                        if (id.indexOf(ParentID) !== -1) {
+                            document.getElementById(id).checked = true;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    function CheckBoxChangedDummy() {
+        var Parent = "Parent";
+        var Child = "Child";
+        var ParentID;
+        var ParentCount = 0;
+        var Controls = document.getElementsByTagName("input");
+        //alert(Controls.length);
+        for (var i = 0; i < Controls.length; i++) {
+            //alert(Controls[i].id);
+            var id = Controls[i].id;
+            //var j = i + 2;
+            //if (j >= Controls.length) {
+            //    //alert(j);
+            //    j = Controls.length
+            //    j = j - 1;
+            //    //alert(j);
+            //}
+            //alert(j);
+            //var id2 = Controls[j].id;
+
+            if (document.getElementById(id).checked) {
+                if (id.indexOf(Parent) !== -1) {
+                    ParentCount = ParentCount + 1;
+                }
+            }
+
+
+            if (id2.indexOf(id2) !== -1) {
+
+            }
+
+
+            if (i == 5) {
+                // $(id2).attr('checked');
+                //alert(document.getElementById(id2).checked);
+                //alert(id2);
+                //document.getElementById(id2).checked = true;
+                //alert(document.getElementById(id2).checked);
+
+                //document.getElementById(id2).checked = true;
+                alert(document.getElementById(id).checked);
+            }
+        }
+        //alert('Yo!');
+    }
+
+</script>
+

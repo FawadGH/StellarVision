@@ -1,0 +1,291 @@
+﻿@model PTSS.Application.SMSCore.Models.UserLevelModel
+@using PTSS.Application.SMSCore.Models
+@{
+    ViewBag.Title = "ViewUserLevel";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("ViewUserLevel", "UserManagement", FormMethod.Post))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+    <div class="form-group">
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>
+                    User Levels List
+                </label>
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>
+                    User Type
+                </label>
+            </div>
+            <div class="col-sm-9">
+                @{ 
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "ddlUserType");
+                    htmlAttributes.Add("onchange", "Refresh()");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserTypeList, "Select User Type", htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom table-responsive" style="margin-left:3px; margin-right:3px" id="UserLevelsDiv">
+            <div class="col-sm-11" style="width:95%">
+                <table class="table table-bordered table-hover" id="UserLevelsTable">
+                    <tr class="info">
+                        <th>
+                            User Type Name
+                        </th>
+                        <th>
+                            User Level ID
+                        </th>
+                        <th>
+                            User Level Name
+                        </th>
+                        <th>
+                            Modify
+                        </th>
+                    </tr>
+                    @foreach (UserLevelModel UserLevel in Model.UserLevelList)
+                    {
+                        <tr>
+                            <td>
+                                @UserLevel.UserTypeName
+                            </td>
+                            <td>
+                                @UserLevel.UserLevelID
+                            </td>
+                            <td>
+                                @UserLevel.UserLevelName
+                            </td>
+                            <td>
+                                <div class="col-sm-2">
+                                    <i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserLevel('@UserLevel.UserTypeName', '@UserLevel.UserLevelName')"></i>
+                                </div>
+                                <div class="col-sm-2">
+                                    <i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserLevel('@UserLevel.UserTypeName', '@UserLevel.UserLevelName')"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table> 
+            </div>
+        </div>
+        <div class="row margin-bottom collapse" id="ModifyUserLevelDiv">
+            <div class="col-sm-11">
+                <div class="row margin-bottom">
+                    <div class="col-sm-2">
+                        <label>
+                            User Type
+                        </label>
+                    </div>
+                    <div class="col-sm-2">
+                        <label id="UserTypeNameLabel"></label>
+                    </div>
+                </div>
+                <div class="row margin-bottom">
+                    <div class="col-sm-2">
+                        <label>
+                            User Level
+                        </label>
+                    </div>
+                    <div class="col-sm-7 margin-bottom">
+                        @{
+                            htmlAttributes.Clear();
+                            htmlAttributes.Add("class", "form-control");
+                            htmlAttributes.Add("id", "UserLevelName");
+                            htmlAttributes.Add("placeholder", "User Level Name");
+                        }
+                        @Html.TextBoxFor(x => x.UserLevelName, htmlAttributes)
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="button" id="btnSave" class="btn btn-default" value="Save" onclick="SaveUserLevel()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <input type="button" id="btnRefresh" class="btn btn-default fa" value="&#xf021; Refresh" onclick="Refresh(true)"/>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    var UserTypeID;
+    var OldUserLevelName;
+
+    function Refresh(isRefresh) {
+        $("#ModifyUserLevelDiv").hide();
+        if (isRefresh) {
+            $("#ddlUserType").val('');
+        }
+        UserTypeID = $("#ddlUserType").val();
+        var URL = '@Url.Action("GetUserLevel","UserManagement")';
+        var model;
+        if (UserTypeID != 'undefined') {
+            model = {
+                "UserTypeID": UserTypeID
+            };
+        }
+        var UserLevelList;
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (response) {
+                if (response.success) {
+                    UserLevelList = JSON.parse(response.UserLevelList);
+                    $("#UserLevelsTable tr:gt(0)").remove();
+                    $("#UserLevelsTable").append(
+                        $.map(UserLevelList, function (nothing, index) {
+                            return '<tr>' +
+                            '<td>' + UserLevelList[index].UserTypeName + '</td>' +
+                            '<td>' + UserLevelList[index].UserLevelID + '</td>' +
+                            '<td>' + UserLevelList[index].UserLevelName + '</td>' +
+                            '<td>' +
+                                '<div class="col-sm-2">' +
+                                    '<i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserLevel(\'' + UserLevelList[index].UserTypeName + '\',\'' + UserLevelList[index].UserLevelName + '\')"></i>' +
+                                '</div>' +
+                                '<div class="col-sm-2">' +
+                                   ' <i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserLevel(\'' + UserLevelList[index].UserTypeName + '\',\'' + UserLevelList[index].UserLevelName + '\')"></i>' +
+                                '</div>' +
+                            '</td>' +
+                        '</tr>'
+                        }
+                    ));
+                    $("#successDiv").html(response.ResponseMessage);
+                    $("#successDiv").show();
+                }
+                else {
+                    $("#errorDiv").html(response.ResponseMessage);
+                    $("#errorDiv").show();
+                }
+            }
+        });
+    }
+
+    function EditUserLevel(UserTypeName, UserLevelName) {
+        UserTypeID = $("#ddlUserType").children("option").filter(function () {
+            return $(this).text() === UserTypeName
+        }).val();
+        OldUserLevelName = UserLevelName;
+        $("#UserTypeNameLabel").html(UserTypeName);
+        $("#UserLevelName").val(UserLevelName);
+        $("#ModifyUserLevelDiv").show();
+    }
+
+    function SaveUserLevel() {
+        var URL = '@Url.Action("EditUserLevel", "UserManagement")';
+        var model = {
+            "UserLevelName": OldUserLevelName,
+            "UserTypeID": UserTypeID,
+            "NewUserLevelName": $("#UserLevelName").val()
+        };
+
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (response) {
+                if (response.success) {
+                    UserLevelList = JSON.parse(response.UserLevelList);
+                    $("#UserLevelsTable tr:gt(0)").remove();
+                    $("#UserLevelsTable").append(
+                        $.map(UserLevelList, function (nothing, index) {
+                            return '<tr>' +
+                            '<td>' + UserLevelList[index].UserTypeName + '</td>' +
+                            '<td>' + UserLevelList[index].UserLevelID + '</td>' +
+                            '<td>' + UserLevelList[index].UserLevelName + '</td>' +
+                            '<td>' +
+                                '<div class="col-sm-2">' +
+                                    '<i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserLevel(\'' + UserLevelList[index].UserTypeName + '\',\'' + UserLevelList[index].UserLevelName + '\')"></i>' +
+                                '</div>' +
+                                '<div class="col-sm-2">' +
+                                   ' <i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserLevel(\'' + UserLevelList[index].UserTypeName + '\',\'' + UserLevelList[index].UserLevelName + '\')"></i>' +
+                                '</div>' +
+                            '</td>' +
+                        '</tr>'
+                        }
+                    ));
+
+                    $("#successDiv").html(response.ResponseMessage);
+                    $("#successDiv").show();
+                }
+                else {
+                    $("#errorDiv").html(response.ResponseMessage);
+                    $("#errorDiv").show();
+                }
+            }
+        });
+    }
+
+    function DeleteUserLevel(UserTypeName, UserLevelName) {
+        UserTypeID = $("#ddlUserType").children("option").filter(function () {
+            return $(this).text() === UserTypeName
+        }).val();
+        if (confirm("Are you sure you want to delete " + UserLevelName + " User Level of " + UserTypeName + " User Type?")) {
+            var URL = '@Url.Action("DeleteUserLevel", "UserManagement")';
+            var model = {
+                "UserLevelName": UserLevelName,
+                "UserTypeID": UserTypeID,
+                "UserTypeName" : UserTypeName
+            };
+
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                async: false,
+                url: URL,
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (response) {
+                    if (response.success) {
+                        UserLevelList = JSON.parse(response.UserLevelList);
+                        $("#UserLevelsTable tr:gt(0)").remove();
+                        $("#UserLevelsTable").append(
+                            $.map(UserLevelList, function (nothing, index) {
+                                return '<tr>' +
+                                '<td>' + UserLevelList[index].UserTypeName + '</td>' +
+                                '<td>' + UserLevelList[index].UserLevelID + '</td>' +
+                                '<td>' + UserLevelList[index].UserLevelName + '</td>' +
+                                '<td>' +
+                                    '<div class="col-sm-2">' +
+                                        '<i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserLevel(\'' + UserLevelList[index].UserTypeName + '\',\'' + UserLevelList[index].UserLevelName + '\')"></i>' +
+                                    '</div>' +
+                                    '<div class="col-sm-2">' +
+                                       ' <i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserLevel(\'' + UserLevelList[index].UserTypeName + '\',\'' + UserLevelList[index].UserLevelName + '\')"></i>' +
+                                    '</div>' +
+                                '</td>' +
+                            '</tr>'
+                            }
+                        ));
+
+                        $("#successDiv").html(response.ResponseMessage);
+                        $("#successDiv").show();
+                    }
+                    else {
+                        $("#errorDiv").html(response.ResponseMessage);
+                        $("#errorDiv").show();
+                    }
+                }
+            });
+        }
+        else {
+
+        }
+    }
+</script>

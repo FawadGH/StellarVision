@@ -1,0 +1,229 @@
+﻿@model PTSS.Application.SMSCore.Models.UserTypeModel
+@using PTSS.Application.SMSCore.Models
+@{
+    ViewBag.Title = "View User Type";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("ViewUserType", "UserManagement", FormMethod.Post))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2">
+                <label>User Types List</label>
+            </div>
+        </div>
+        <div class="row margin-bottom table-responsive" style="margin-left:3px; margin-right:3px">
+            <div class="col-sm-11" style="width:95%">
+                <table class="table table-bordered table-hover" id="UserTypeTable">
+                    <tr class="info">
+                        <th>
+                            User Type ID
+                        </th>
+                        <th>
+                            User Type Name
+                        </th>
+                        <th>
+                            Modify
+                        </th>
+                    </tr>
+                    @foreach(UserTypeModel UserType in Model.UserTypeList)
+                    {
+                        <tr>
+                            <td>
+                                @UserType.UserTypeID
+                            </td>
+                            <td>
+                                @UserType.UserTypeName
+                            </td>
+                            <td>
+                                <div class="col-sm-1" >
+                                    <i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserType('@UserType.UserTypeName')"></i>
+                                </div>
+                                <div class="col-sm-1">
+                                    <i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserType('@UserType.UserTypeName')"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+        <div class="row margin-bottom collapse" id="EditableDiv">
+            <div class="col-sm-2">
+                <label>User Type Name</label>
+            </div>
+            <div class="col-sm-7 margin-bottom">
+                @{ 
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("placeholder", "User Type Name");
+                    htmlAttributes.Add("id", "editUserTypeName");
+                }
+                @Html.TextBoxFor(x => x.UserTypeName, htmlAttributes)
+            </div>
+            <div class="col-sm-2">
+                <input type="button" id="btnSaveUserType" value="Save" class="btn btn-default" onclick="SaveUserType()"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <input type="button" id="btnRefresh" value="&#xf021; Refresh" class="btn btn-default fa" onclick="Refresh()"/>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+
+    var OldUserTypeName;
+    var UserTypesList;
+
+    function EditUserType(UserTypeName) {
+        var Name = UserTypeName;
+        OldUserTypeName = UserTypeName;
+        $("#EditableDiv").show();
+        $("#editUserTypeName").val(Name);
+    }
+
+    function Refresh() {
+        $("#successDiv").hide();
+        $("#errorDiv").hide();
+        $("#EditableDiv").hide();
+        var URL = '@Url.Action("GetUserTypes","UserManagement")';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.success) {
+                    UserTypesList = JSON.parse(response.UserTypeList);
+                    $("#UserTypeTable tr:gt(0)").remove();
+                    $("#UserTypeTable").append(
+                        $.map(UserTypesList, function (nothing, index) {
+                            return '<tr>' +
+                                        '<td>' + UserTypesList[index].UserTypeID + '</td>' +
+                                        '<td>' + UserTypesList[index].UserTypeName + '</td>' +
+                                        '<td><div class="col-sm-1" >' +
+                                                '<i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserType(\'' + UserTypesList[index].UserTypeName + '\')"></i>' +
+                                            '</div>' +
+                                            '<div class="col-sm-1">' +
+                                                '<i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserType(\'' + UserTypesList[index].UserTypeName + '\')"></i>' +
+                                            '</div>' +
+                                        '</td>' +
+                                    '</tr>'
+                        }
+                    ));
+
+                    $("#successDiv").html(response.ResponseMessage);
+                    $("#successDiv").show();
+                }
+                else {
+                    $("#errorDiv").html(response.ResponseMessage);
+                    $("#errorDiv").show();
+                }
+            }
+        });
+    }
+
+    function SaveUserType() {
+        var URL = '@Url.Action("EditUserType", "UserManagement")';
+        var model = {
+            "UserTypeName": OldUserTypeName,
+            "NewUserTypeName": $("#editUserTypeName").val()
+        };
+
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            contentType: 'application/json',
+            data: JSON.stringify(model),
+            success: function (response) {
+                if (response.success) {
+                    UserTypesList = JSON.parse(response.UserTypeList);
+                    $("#UserTypeTable tr:gt(0)").remove();
+                    $("#UserTypeTable").append(
+                        $.map(UserTypesList, function (nothing, index) {
+                            return '<tr>' +
+                                        '<td>' + UserTypesList[index].UserTypeID + '</td>' +
+                                        '<td>' + UserTypesList[index].UserTypeName + '</td>' +
+                                        '<td><div class="col-sm-1" >' +
+                                                '<i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserType(\'' + UserTypesList[index].UserTypeName + '\')"></i>' +
+                                            '</div>' +
+                                            '<div class="col-sm-1">' +
+                                                '<i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserType(\'' + UserTypesList[index].UserTypeName + '\')"></i>' +
+                                            '</div>' +
+                                        '</td>' +
+                                    '</tr>'
+                        }
+                    ));
+
+                    $("#successDiv").html(response.ResponseMessage);
+                    $("#successDiv").show();
+                }
+                else {
+                    $("#errorDiv").html(response.ResponseMessage);
+                    $("#errorDiv").show();
+                }
+            }
+        });
+    }
+
+    function DeleteUserType(UserTypeName) {
+        if (confirm("Are you sure you want to delete " + UserTypeName + " User Type?")) {
+            var URL = '@Url.Action("DeleteUserType", "UserManagement")';
+            var model = {
+                "UserTypeName": UserTypeName
+            };
+
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                async: false,
+                url: URL,
+                contentType: 'application/json',
+                data: JSON.stringify(model),
+                success: function (response) {
+                    if (response.success) {
+                        UserTypesList = JSON.parse(response.UserTypeList);
+                        $("#UserTypeTable tr:gt(0)").remove();
+                        $("#UserTypeTable").append(
+                            $.map(UserTypesList, function (nothing, index) {
+                                return '<tr>' +
+                                            '<td>' + UserTypesList[index].UserTypeID + '</td>' +
+                                            '<td>' + UserTypesList[index].UserTypeName + '</td>' +
+                                            '<td><div class="col-sm-1" >' +
+                                                    '<i class="fa fa-edit" data-toggle="tooltip" title="Modify" onclick="EditUserType(\'' + UserTypesList[index].UserTypeName + '\')"></i>' +
+                                                '</div>' +
+                                                '<div class="col-sm-1">' +
+                                                    '<i class="fa fa-trash-o" data-toggle="tooltip" title="Delete" onclick="DeleteUserType(\'' + UserTypesList[index].UserTypeName + '\')"></i>' +
+                                                '</div>' +
+                                            '</td>' +
+                                        '</tr>'
+                            }
+                        ));
+
+                        $("#successDiv").html(response.ResponseMessage);
+                        $("#successDiv").show();
+                    }
+                    else {
+                        $("#errorDiv").html(response.ResponseMessage);
+                        $("#errorDiv").show();
+                    }
+                }
+            });
+        }
+        else {
+            
+        }
+    }
+</script>

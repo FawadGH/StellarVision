@@ -1,0 +1,164 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main2.master.cs" Inherits="SMSCore.UI.Main2" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style>
+        .header {
+            background-color:cadetblue;
+            color:black;
+            height:50px;
+            text-align:center;
+            padding-top:5px;
+        }
+        .sidebar {
+            background-color:burlywood;
+            color:black;
+            padding-left:5px;
+            padding-top:5px;
+            padding-bottom:5px;
+        }
+        table.MasterTable {
+            /*width:100%;
+            border-collapse:collapse;*/
+            table-layout:fixed;
+            width:100%;
+        }
+        table.MasterTable td {
+            overflow:hidden;
+        }
+        table.MasterTable td:nth-of-type(1) {
+            width: 20%;
+        }
+        table.MasterTable td:nth-of-type(2) {
+            width: 80%;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="..\Content\navbar2.css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+</head>
+<body>
+    <div class="header">
+        <asp:Label ID="lblTitle" runat="server" Text=""></asp:Label>
+    </div>
+    <nav id="menu" class="left">
+        <ul>
+        <li><a href="#" class="active"><i class="fa fa-home"></i>Home</a></li>
+        <li><a href="#"><i class="fa fa-info-circle"></i>About</a></li>
+        <li> <a href="#"><i class="fa fa-laptop"></i>Services <i class="fa fa-caret-down"></i></a>
+            <ul>
+            <li><a href="#">Service</a></li>
+            <li><a href="#">Service</a></li>
+            <li><a href="#">Service</a></li>
+            </ul>
+        </li>
+        <li><a href="#"><i class="fa fa-phone"></i>Contact</a></li>
+        </ul>
+        <a href="#" id="showmenu"> <i class="fa fa-align-justify"></i> </a>
+    </nav>
+    <div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+
+    <div id="wrapper">
+      
+    </div>
+
+
+    <%--<table class="MasterTable">
+        <colgroup>
+            <col style="width:20%" />
+            <col style="width:80%" />
+        </colgroup>
+        <tr>
+            <td colspan="2">
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+    </table>--%>
+   
+    
+
+    <%--<form id="wrapper" runat="server">
+    <div class="overlay"></div>
+    <table class="MasterTable">
+        <colgroup>
+            <col style="width:20%" />
+            <col style="width:80%" />
+        </colgroup>
+        <tr>
+            <td colspan="2">
+                <div class="header">
+                    <asp:Label ID="lblTitle" runat="server" Text=""></asp:Label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+            <td>
+                <div>
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+                    </asp:ContentPlaceHolder>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>--%>
+</body>
+
+<%--    <script type="text/javascript" src="..\Scripts\navbar.js"></script>--%>
+
+    <%--<script type="text/javascript" src="..\Scripts\bootstrap.js"></script>
+    <script type="text/javascript" src="..\Scripts\bootstrap.min.js"></script>--%>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.js"></script>
+    <%--<script type="text/javascript" src="..\Scripts\jquery-3.1.1.intellisense.js"></script>--%>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.slim.js"></script>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.slim.min.js"></script>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    
+
+
+    <script type="text/javascript">
+        $("#showmenu").click(function (e) {
+            e.preventDefault();
+            $("#menu").toggleClass("show");
+        });
+
+        $("#menu a").click(function (event) {
+            event.preventDefault();
+            if ($(this).next('ul').length) {
+                $(this).next().toggle('fast');
+                $(this).children('i:last-child').toggleClass('fa-caret-down fa-caret-left');
+            }
+        });
+
+
+    </script>
+</html>

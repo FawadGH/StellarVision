@@ -1,0 +1,619 @@
+﻿@model PTSS.Application.SMSCore.Models.UserModel
+@{
+    ViewBag.Title = "ViewUsers";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("ViewUsers","UserManagement", FormMethod.Post))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+    <!--Search criteria for User-->
+    <div class="form-group">
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Search Filter</label>
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>User ID</label>
+            </div>
+            <div class="col-sm-9">
+                @{ 
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.UserID, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom" id="UserTypeDiv">
+            <div class="col-sm-2">
+                <label>User Type</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "ddlUserType");
+                    htmlAttributes.Add("onchange", "GetUserLevels()");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserTypeSelectList, "Select User Type", htmlAttributes)
+            </div>
+        </div>
+
+        <div class="row margin-bottom collapse" id="UserLevelDiv">
+            <div class="col-sm-2">
+                <label>User Level</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "ddlUserLevel");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserLevelSelectList, "Select User Level", htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom" id="UserStatusDiv">
+            <div class="col-sm-2">
+                <label>User Status</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "ddlUserStatus");
+                }
+                @Html.DropDownListFor(x => x.UserStatusID, Model.UserStatusSelectList, "Select User Status", htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-default" value="Search User" id="btnSearch" onclick="SearchUser()"/>
+            </div>
+        </div>
+    </div>
+    <!--User Basic Details Table-->
+    <div class="form-group collapse" id="FilteredUsersDiv">
+        <div class="row margin-bottom table-responsive" style="margin-left:3px; margin-right:3px">
+            <div class="col-sm-11" style="width:95%">
+                <table class="table table-bordered table-hover" id="FilteredUsersTable">
+                    <thead>
+                        <tr class="info">
+                            <th>
+                                User ID
+                            </th>
+                            <th>
+                                Full Name
+                            </th>
+                            <th>
+                                User Type
+                            </th>
+                            <th>
+                                User Level
+                            </th>
+                            <th>
+                                User Status
+                            </th>
+                            <th>
+                                Mobile Number
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>
+                            Fawad
+                        </td>
+                        <td>
+                            Fawad A Khan
+                        </td>
+                        <td>
+                            Administrator
+                        </td>
+                        <td>
+                            Normal
+                        </td>
+                        <td>
+                            Active
+                        </td>
+                        <td>
+                            03001234567
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-sm-1" data-toggle="tooltip" title="View User" onclick="ViewUser()">
+                                    <i class="fa fa-eye"></i>
+                                </div>
+                                <div class="col-sm-1" data-toggle="tooltip" title="Edit User" onclick="EditExistingUser()">
+                                    <i class="fa fa-edit"></i>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--Edit User Details-->
+    <div class="form-group collapse" id="UserDetailDiv">
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>First Name</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editFirstNameDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "First Name");
+                    htmlAttributes.Add("id", "editFirstName");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.FirstName, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewFirstNameDiv"></div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Middle Name</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editMiddleNameDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Middle Name");
+                    htmlAttributes.Add("id", "editMiddleName");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.MiddleName, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewMiddleNameDiv"></div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Last Name</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editLastNameDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Last Name");
+                    htmlAttributes.Add("id", "editLastName");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.LastName, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewLastNameDiv"></div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Email</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editEmailDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Email");
+                    htmlAttributes.Add("id", "editEmail");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.Email, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewEmailDiv"></div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Mobile Number</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editMobileNumberDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Mobile Number");
+                    htmlAttributes.Add("id", "editMobileNumber");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.MobileNumber, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewMobileNumberDiv"></div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>User ID</label>
+            </div>
+            <div class="col-sm-7 collapse" id="editUserIDDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "User ID");
+                    htmlAttributes.Add("id", "editUserID");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.UserID, htmlAttributes)
+                <label id="isUserIDAvailable" class="collapse"></label>
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewUserIDDiv"></div>
+            <div class="col-sm-2 collapse" id="UserIDAvailabilityDiv">
+                <input type="button" id="UserIDAvailability" class="btn btn-default" value="Check Availabilty" onclick="CheckUserIDAvailability()" />
+            </div>
+        </div>
+        <div class="row margin-bottom collapse" id="PasswordDiv">
+            <div class="col-sm-2">
+                <label>Password</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Password");
+                    htmlAttributes.Add("id", "editPassword");
+                    htmlAttributes.Add("type", "password");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.UserLoginPassword, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom collapse" id="ConfirmPasswordDiv">
+            <div class="col-sm-2">
+                <label>Confirm Password</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Confirm Password");
+                    htmlAttributes.Add("id", "editConfirmPassword");
+                    htmlAttributes.Add("type", "password");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.ConfirmPassword, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Alternate Mobile Number</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editAlternateMobileNumberDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Alternate Mobile Number");
+                    htmlAttributes.Add("id", "editAlternateMobileNumber");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.AlternateMobileNumber, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewAlternateMobileNumberDiv"></div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>CNIC</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editCNICDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "CNIC");
+                    htmlAttributes.Add("id", "editCNIC");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.CNIC, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewCNICDiv"></div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Home Address</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editHomeAddressDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Home Address");
+                    htmlAttributes.Add("id", "editHomeAddress");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.HomeAddress, htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewHomeAddressDiv"></div>
+        </div>
+        <div class="row margin-bottom" id="EditUserTypeDiv">
+            <div class="col-sm-2">
+                <label>User Type</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editddlUserTypeDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "editddlUserType");
+                    htmlAttributes.Add("onchange", "GetEditUserLevels()");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserTypeSelectList, "Select User Type", htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewUserTypeDiv"></div>
+        </div>
+
+        <div class="row margin-bottom collapse" id="EditUserLevelDiv">
+            <div class="col-sm-2">
+                <label>User Level</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editddlUserLevelDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "editddlUserLevel");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserLevelSelectList, "Select User Level", htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewUserLevelDiv"></div>
+        </div>
+        <div class="row margin-bottom" id="EditUserStatusDiv">
+            <div class="col-sm-2">
+                <label>User Status</label>
+            </div>
+            <div class="col-sm-9 collapse" id="editddlUserStatusDiv">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "editddlUserStatus");
+                }
+                @Html.DropDownListFor(x => x.UserStatusID, Model.UserStatusSelectList, "Select User Status", htmlAttributes)
+            </div>
+            <div class="col-sm-9 well well-sm collapse" id="viewUserStatusDiv"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-default" id="btnEditUser" value="Edit User" onclick="EditExistingUser()" />
+            </div>
+        </div>
+    </div>
+                    }
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    $('[data-toggle="tooltip"]').tooltip();
+    //});
+
+    var FilteredUsersList;
+
+    function SearchUser() {
+        $("#FilteredUsersDiv").hide();
+        $("#successDiv").hide();
+        $("#errorDiv").hide();
+        var URL = '@Url.Action("SearchUsers", "UserManagement")';
+        var model = {
+            "UserID": $("#UserID").val(),
+            "UserTypeID": $("#ddlUserType").val(),
+            "UserLevelID": $("#ddlUserLevel").val(),
+            "UserStatusID": $("#ddlUserStatus").val()
+        };
+
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            contentType: 'application/json',
+            url: URL,
+            data: JSON.stringify(model),
+            success: function (response) {
+                if (response.success) {
+                    FilteredUsersList = JSON.parse(response.UsersList);
+                    //alert(JSON.stringify(FilteredUsersList[0]));
+                    $("#FilteredUsersTable tr:gt(0)").remove();
+                    $("#FilteredUsersTable").append(
+                        $.map(FilteredUsersList, function (nothing, index) {
+                            return '<tr>' +
+                                        '<td>' + FilteredUsersList[index].UserID + '</td>' +
+                                        '<td>' + FilteredUsersList[index].FullName + '</td>' +
+                                        '<td>' + FilteredUsersList[index].UserType.UserTypeName + '</td>' +
+                                        '<td>' + FilteredUsersList[index].UserLevel.UserLevelName + '</td>' +
+                                        '<td>' + FilteredUsersList[index].UserStatus.UserStatusName + '</td>' +
+                                        '<td>' + FilteredUsersList[index].MobileNumber + '</td>' +
+                                        '<td><div class="row">' +
+                                                '<div class="col-sm-1" data-toggle="tooltip" title="View User" onclick=\'ViewUser(' + JSON.stringify(FilteredUsersList[index]) + ')\'>' +
+                                                    '<i class="fa fa-eye"></i>' +
+                                                '</div>' +
+                                                '<div class="col-sm-1" data-toggle="tooltip" title="Edit User" onclick=\'EditExistingUser(' + JSON.stringify(FilteredUsersList[index]) + ')\'>' +
+                                                    '<i class="fa fa-edit"></i>' +
+                                                '</div>' +
+                                            '</div></td>' +
+                                '</tr>';
+                        }).join()
+                    );
+                    $("#UserDetailDiv").hide();
+                    $("#FilteredUsersDiv").show();
+                    $("#successDiv").html(response.ResponseMessage);
+                    $("#successDiv").show();
+                }
+                else
+                {
+                    $("#errorDiv").html(response.ResponseMessage);
+                    $("#errorDiv").show();
+                    $("#UserDetailDiv").hide();
+                    $("#FilteredUsersDiv").hide();
+                }
+            }
+        });
+    }
+
+    function ViewUser(UserModel) {
+        $("#viewFirstNameDiv").html(UserModel.FirstName);
+        $("#viewMiddleNameDiv").html(UserModel.MiddleName);
+        $("#viewLastNameDiv").html(UserModel.LastName);
+        $("#viewEmailDiv").html(UserModel.Email);
+        $("#viewMobileNumberDiv").html(UserModel.MobileNumber);
+        $("#viewUserIDDiv").html(UserModel.UserID);
+        $("#viewAlternateMobileNumberDiv").html(UserModel.AlternateMobileNumber);
+        $("#viewCNICDiv").html(UserModel.CNIC);
+        $("#viewHomeAddressDiv").html(UserModel.HomeAddress);
+        $("#viewUserTypeDiv").html(UserModel.UserType.UserTypeName);
+        $("#viewUserLevelDiv").html(UserModel.UserLevel.UserLevelName);
+        $("#viewUserStatusDiv").html(UserModel.UserStatus.UserStatusName);
+
+
+        $("#UserDetailDiv").show();
+        HideEditUserDivs();
+        DisplayViewUserDivs();
+    }
+
+    function EditExistingUser(UserModel) {
+        $("#editFirstName").val(UserModel.FirstName);
+        $("#editMiddleName").val(UserModel.MiddleName);
+        $("#editLastName").val(UserModel.LastName);
+        $("#editEmail").val(UserModel.Email);
+        $("#editMobileNumber").val(UserModel.MobileNumber);
+        $("#editUserID").val(UserModel.UserID);
+        $("#editAlternateMobileNumber").val(UserModel.AlternateMobileNumber);
+        $("#editCNIC").val(UserModel.CNIC);
+        $("#editHomeAddress").val(UserModel.HomeAddress);
+        $("#editddlUserType").val(UserModel.UserTypeID);
+        $("#editddlUserLevel").val(UserModel.UserLevelID);
+        $("#editddlUserStatus").val(UserModel.UserStatusID);
+
+
+        $("#UserDetailDiv").show();
+        HideViewUserDivs();
+        DisplayEditUserDivs();
+    }
+
+    function DisplayViewUserDivs() {
+        $("#viewFirstNameDiv").show();
+        $("#viewMiddleNameDiv").show();
+        $("#viewLastNameDiv").show();
+        $("#viewEmailDiv").show();
+        $("#viewMobileNumberDiv").show();
+        $("#viewUserIDDiv").show();
+        $("#viewAlternateMobileNumberDiv").show();
+        $("#viewCNICDiv").show();
+        $("#viewHomeAddressDiv").show();
+        $("#viewUserTypeDiv").show();
+        $("#EditUserLevelDiv").show();
+        $("#viewUserLevelDiv").show();
+        $("#viewUserStatusDiv").show();
+    }
+
+    function HideViewUserDivs() {
+        $("#viewFirstNameDiv").hide();
+        $("#viewMiddleNameDiv").hide();
+        $("#viewLastNameDiv").hide();
+        $("#viewEmailDiv").hide();
+        $("#viewMobileNumberDiv").hide();
+        $("#viewUserIDDiv").hide();
+        $("#viewAlternateMobileNumberDiv").hide();
+        $("#viewCNICDiv").hide();
+        $("#viewHomeAddressDiv").hide();
+        $("#viewUserTypeDiv").hide();
+        $("#viewUserLevelDiv").hide();
+        $("#viewUserStatusDiv").hide();
+    }
+
+    function DisplayEditUserDivs() {
+        $("#editFirstNameDiv").show();
+        $("#editMiddleNameDiv").show();
+        $("#editLastNameDiv").show();
+        $("#editEmailDiv").show();
+        $("#editMobileNumberDiv").show();
+        $("#editUserIDDiv").show();
+        $("#UserIDAvailabilityDiv").show();
+        $("#PasswordDiv").show();
+        $("#ConfirmPasswordDiv").show();
+        $("#editAlternateMobileNumberDiv").show();
+        $("#editCNICDiv").show();
+        $("#editHomeAddressDiv").show();
+        $("#editddlUserTypeDiv").show();
+        if ($("#editddlUserType").val().length > 1) {
+            $("#EditUserLevelDiv").show();
+            $("#editddlUserLevelDiv").show();
+        }
+        $("#editddlUserStatusDiv").show();
+    }
+
+    function HideEditUserDivs() {
+        $("#editFirstNameDiv").hide();
+        $("#editMiddleNameDiv").hide();
+        $("#editLastNameDiv").hide();
+        $("#editEmailDiv").hide();
+        $("#editMobileNumberDiv").hide();
+        $("#editUserIDDiv").hide();
+        $("#UserIDAvailabilityDiv").hide();
+        $("#PasswordDiv").hide();
+        $("#ConfirmPasswordDiv").hide();
+        $("#editAlternateMobileNumberDiv").hide();
+        $("#editCNICDiv").hide();
+        $("#editHomeAddressDiv").hide();
+        $("#editddlUserTypeDiv").hide();
+        $("#editddlUserLevelDiv").hide();
+        $("#EditUserLevelDiv").hide();
+        $("#editddlUserStatusDiv").hide();
+    }
+
+    function GetUserLevels() {
+        var model = {
+            "UserTypeID": $("#ddlUserType").val()
+        };
+        var URL = '@Url.Action("GetUserLevels", "UserManagement")';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            data: JSON.stringify(model),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    var k = 0;
+                    //alert(JSON.stringify(response.UserLevelList));
+                    $('#ddlUserLevel').html('');
+                    $.each(response.UserLevelList, function (i, UserLevel) {
+                        k = k + 1;
+                        $('#ddlUserLevel').append(
+                            $('<option>Select User Level</option>').val(UserLevel.Value).html(UserLevel.Text));
+                    });
+                    if (k == 0)
+                        $('#UserLevelDiv').hide();
+                    else
+                        $('#UserLevelDiv').show();
+                }
+                else
+                    $('#UserLevelDiv').hide();
+            }
+        });
+    }
+
+    function GetEditUserLevels() {
+        var model = {
+            "UserTypeID": $("#editddlUserType").val()
+        };
+        var URL = '@Url.Action("GetUserLevels", "UserManagement")';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            data: JSON.stringify(model),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    var k = 0;
+                    //alert(JSON.stringify(response.UserLevelList));
+                    $('#editddlUserLevel').html('');
+                    $.each(response.UserLevelList, function (i, UserLevel) {
+                        k = k + 1;
+                        $('#editddlUserLevel').append(
+                            $('<option>Select User Level</option>').val(UserLevel.Value).html(UserLevel.Text));
+                    });
+                    if (k == 0)
+                        $('#EditUserLevelDiv').hide();
+                    else
+                        $('#EditUserLevelDiv').show();
+                        $("#editddlUserLevelDiv").show();
+                }
+                else
+                    $('#EditUserLevelDiv').hide();
+            }
+        });
+    }
+</script>

@@ -1,0 +1,179 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main3.master.cs" Inherits="SMSCore.UI.Main3" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style>
+        .header {
+            background-color:cadetblue;
+            color:black;
+            height:50px;
+            text-align:center;
+            padding-top:5px;
+        }
+        .sidebar {
+            background-color:burlywood;
+            color:black;
+            padding-left:5px;
+            padding-top:5px;
+            padding-bottom:5px;
+        }
+        table.MasterTable {
+            /*width:100%;
+            border-collapse:collapse;*/
+            table-layout:fixed;
+            width:100%;
+        }
+        table.MasterTable td {
+            overflow:hidden;
+        }
+        table.MasterTable td:nth-of-type(1) {
+            width: 20%;
+        }
+        table.MasterTable td:nth-of-type(2) {
+            width: 80%;
+        }
+    </style>
+    <%--<link rel="stylesheet" type="text/css" href="..\Content\navbar3.css" />--%>
+    <link rel="stylesheet" type="text/css" href="..\Content\component.css" />
+    <link rel="stylesheet" type="text/css" href="..\Content\demo.css" />
+    <link rel="stylesheet" type="text/css" href="..\Content\normalize.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+</head>
+<body style="background:#7ac1b1;">
+    <div class="header">
+        
+    </div>
+    <ul id="gn-menu" class="gn-menu-main">
+        <asp:Label ID="lblTitle" runat="server" Text=""></asp:Label>
+        <li class="gn-trigger"> 
+            <a class="gn-icon gn-icon-menu"></a>
+            <nav class="gn-menu-wrapper">
+                <div class="gn-scroller">
+                    <ul class="gn-menu">
+                        <li class="gn-search-item">
+                            <input placeholder="Search" type="search" class="gn-search">
+                            <a class="fa fa-search"><span>Search</span></a> 
+                        </li>
+                        <li> 
+                            <a class="gn-icon gn-icon-download">Downloads</a>
+                            <ul class="gn-submenu">
+                                <li>
+                                    <a class="gn-icon gn-icon-illustrator">Vector Illustrations</a>
+                                </li>
+                                <li>
+                                    <a class="gn-icon gn-icon-photoshop">Photoshop files</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a class="gn-icon gn-icon-cog">Settings</a>
+                        </li>
+                        <li>
+                            <a class="gn-icon gn-icon-help">Help</a></li>
+                        <li> 
+                            <a class="gn-icon gn-icon-archive">Archives</a>
+                        <ul class="gn-submenu">
+                        <li>
+                            <a class="gn-icon gn-icon-article">Articles</a>
+                        </li>
+                        <li>
+                            <a class="fa fa-picture-o">Images</a>
+                        </li>
+                        </ul>
+                        </li>
+                    </ul>
+                </div>
+            <!-- /gn-scroller --> 
+            </nav>
+        </li>
+    </ul>
+    <div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+
+
+
+    <%--<table class="MasterTable">
+        <colgroup>
+            <col style="width:20%" />
+            <col style="width:80%" />
+        </colgroup>
+        <tr>
+            <td colspan="2">
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+    </table>--%>
+   
+    
+
+    <%--<form id="wrapper" runat="server">
+    <div class="overlay"></div>
+    <table class="MasterTable">
+        <colgroup>
+            <col style="width:20%" />
+            <col style="width:80%" />
+        </colgroup>
+        <tr>
+            <td colspan="2">
+                <div class="header">
+                    <asp:Label ID="lblTitle" runat="server" Text=""></asp:Label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+            </td>
+            <td>
+                <div>
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+                    </asp:ContentPlaceHolder>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>--%>
+</body>
+
+    <%--<script type="text/javascript" src="..\Scripts\bootstrap.js"></script>
+    <script type="text/javascript" src="..\Scripts\bootstrap.min.js"></script>--%>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.js"></script>
+    <%--<script type="text/javascript" src="..\Scripts\jquery-3.1.1.intellisense.js"></script>--%>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.slim.js"></script>
+    <script type="text/javascript" src="..\Scripts\jquery-3.1.1.slim.min.js"></script>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+
+    <script src="..\Scripts\classie.js"></script> 
+    <script src="..\Scripts\gnmenu.js"></script>
+
+
+    <script type="text/javascript">
+        new gnMenu(document.getElementById('gn-menu'));
+    </script>
+
+    
+</html>

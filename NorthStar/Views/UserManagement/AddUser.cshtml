@@ -1,0 +1,350 @@
+﻿@model PTSS.Application.SMSCore.Models.UserModel
+@{
+    ViewBag.Title = "AddUser";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("AddUser", "UserManagement", FormMethod.Post, new { id = "AddUser" }))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+
+    <div class="form-group">
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>First Name</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "First Name");
+                    htmlAttributes.Add("id", "FirstName");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.FirstName, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Middle Name</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Middle Name");
+                    htmlAttributes.Add("id", "MiddleName");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.MiddleName, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Last Name</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Last Name");
+                    htmlAttributes.Add("id", "LastName");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.LastName, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Email</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Email");
+                    htmlAttributes.Add("id", "Email");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.Email, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Mobile Number</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Mobile Number");
+                    htmlAttributes.Add("id", "MobileNumber");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.MobileNumber, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>User ID</label>
+            </div>
+            <div class="col-sm-7">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "User ID");
+                    htmlAttributes.Add("id", "UserID");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.UserID, htmlAttributes)
+                <label id="isUserIDAvailable" class="collapse"></label>
+            </div>
+            <div class="col-sm-2">
+                <input type="button" id="UserIDAvailability" class="btn btn-default" value="Check Availabilty" onclick="CheckUserIDAvailability()" />
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Password</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Password");
+                    htmlAttributes.Add("id", "Password");
+                    htmlAttributes.Add("type", "password");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.UserLoginPassword, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Confirm Password</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Confirm Password");
+                    htmlAttributes.Add("id", "ConfirmPassword");
+                    htmlAttributes.Add("type", "password");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.ConfirmPassword, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Alternate Mobile Number</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Alternate Mobile Number");
+                    htmlAttributes.Add("id", "AlternateMobileNumber");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.AlternateMobileNumber, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>CNIC</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "CNIC");
+                    htmlAttributes.Add("id", "CNIC");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.CNIC, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom">
+            <div class="col-sm-2">
+                <label>Home Address</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("placeholder", "Home Address");
+                    htmlAttributes.Add("id", "HomeAddress");
+                    htmlAttributes.Add("type", "text");
+                    htmlAttributes.Add("class", "form-control");
+                }
+                @Html.TextBoxFor(x => x.HomeAddress, htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom" id="UserTypeDiv">
+            <div class="col-sm-2">
+                <label>User Type</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "ddlUserType");
+                    htmlAttributes.Add("onchange", "GetUserLevels()");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserTypeSelectList, "Select User Type", htmlAttributes)
+            </div>
+        </div>
+
+        <div class="row margin-bottom collapse" id="UserLevelDiv">
+            <div class="col-sm-2">
+                <label>User Level</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "ddlUserLevel");
+                }
+                @Html.DropDownListFor(x => x.UserTypeID, Model.UserLevelSelectList, "Select User Level", htmlAttributes)
+            </div>
+        </div>
+        <div class="row margin-bottom" id="UserStatusDiv">
+            <div class="col-sm-2">
+                <label>User Status</label>
+            </div>
+            <div class="col-sm-9">
+                @{
+                    htmlAttributes.Clear();
+                    htmlAttributes.Add("class", "form-control");
+                    htmlAttributes.Add("id", "ddlUserStatus");
+                }
+                @Html.DropDownListFor(x => x.UserStatusID, Model.UserStatusSelectList, "Select User Status", htmlAttributes)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-default" id="btnAddUser" value="Add User" onclick="AddNewUser()"/>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function GetUserLevels() {
+        var model = {
+            "UserTypeID": $("#ddlUserType").val()
+        };
+        var URL = '@Url.Action("GetUserLevels", "UserManagement")';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            data: JSON.stringify(model),
+            contentType: "application/json",
+            success: function (response) {
+                if (response.success) {
+                    var k = 0;
+                    //alert(JSON.stringify(response.UserLevelList));
+                    $('#ddlUserLevel').html('');
+                    $.each(response.UserLevelList, function (i, UserLevel) {
+                        k = k + 1;
+                        $('#ddlUserLevel').append(
+                            $('<option>Select User Level</option>').val(UserLevel.Value).html(UserLevel.Text));
+                    });
+                    if (k == 0)
+                        $('#UserLevelDiv').hide();
+                    else
+                        $('#UserLevelDiv').show();
+                }
+                else
+                    $('#UserLevelDiv').hide();
+            }
+        });
+    }
+
+    function CheckUserIDAvailability() {
+        var model = {
+            "UserID": $("#UserID").val()
+        }
+        var URL = '@Url.Action("CheckUserIDAvailability", "UserManagement")';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: URL,
+            cache: false,
+            async: false,
+            data: JSON.stringify(model),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.success) {
+                    $('#isUserIDAvailable').attr("class", "text-success collapse");
+                    $('#isUserIDAvailable').html("Available");
+                    $('#isUserIDAvailable').show();
+                }
+                else {
+                    $('#isUserIDAvailable').attr("class", "errorLabel collapse");
+                    $('#isUserIDAvailable').html("Not Available");
+                    $('#isUserIDAvailable').show();
+                }
+            }
+        });
+    }
+
+    function AddNewUser() {
+        $("#successDiv").hide();
+        $("#errorDiv").hide();
+        //alert(JSON.stringify(@Html.Raw(Json.Encode(Model))));
+        
+        var FirstName = $("#FirstName").val();
+        var MiddleName = $("#MiddleName").val();
+        var LastName = $("#LastName").val();
+        var Email = $("#Email").val();
+        var MobileNumber = $("#MobileNumber").val();
+        var UserID = $("#UserID").val();
+        var Password = $("#Password").val();
+        var ConfirmPassword = $("#ConfirmPassword").val();
+        var AlternateMobileNumber = $("#AlternateMobileNumber").val();
+        var CNIC = $("#CNIC").val();
+        var HomeAddress = $("#HomeAddress").val();
+        var UserType = $("#ddlUserType").val();
+        var UserLevel = $("#ddlUserLevel").val();
+        var UserStatus = $("#ddlUserStatus").val();
+
+        var inputField = {
+            "FirstName": FirstName,
+            "MiddleName": MiddleName,
+            "LastName": LastName,
+            "Email": Email,
+            "MobileNumber": MobileNumber,
+            "UserID": UserID,
+            "UserLoginPassword": Password,
+            "AlternateMobileNumber": AlternateMobileNumber,
+            "CNIC": CNIC,
+            "HomeAddress": HomeAddress,
+            "UserTypeID": UserType,
+            "UserLevelID": UserLevel,
+            "UserStatusID": UserStatus
+        };
+        //var model = @Html.Raw(Json.Encode(Model));
+        var URL = '@Url.Action("AddUser","UserManagement")';
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            url: URL,
+            data: JSON.stringify(inputField),
+            contentType: 'application/json',
+            success: function(response){
+                if(response.success){
+                    $("#successDiv").html(response.ResponseMessage);
+                    $("#successDiv").show();
+                }
+                else{
+                    $("#errorDiv").html(response.ResponseMessage);
+                    $("#errorDiv").show();
+                }
+            }
+        });
+    }
+</script>

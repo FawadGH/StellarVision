@@ -1,0 +1,154 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main.master.cs" Inherits="SMSCore.Main" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style>
+        .header {
+            background-color:cadetblue;
+            color:black;
+            height:50px;
+            text-align:center;
+            padding-top:5px;
+        }
+        .sidebar {
+            background-color:burlywood;
+            color:black;
+            padding-left:5px;
+            padding-top:5px;
+            padding-bottom:5px;
+        }
+        table.MasterTable {
+            /*width:100%;
+            border-collapse:collapse;*/
+            table-layout:fixed;
+            width:100%;
+        }
+        table.MasterTable td {
+            overflow:hidden;
+        }
+        table.MasterTable td:nth-of-type(1) {
+            width: 20%;
+        }
+        table.MasterTable td:nth-of-type(2) {
+            width: 80%;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var trigger = $('.hamburger'),
+                overlay = $('.overlay'),
+               isClosed = false;
+
+            trigger.click(function () {
+                hamburger_cross();
+            });
+
+            function hamburger_cross() {
+
+                if (isClosed == true) {
+                    overlay.hide();
+                    trigger.removeClass('is-open');
+                    trigger.addClass('is-closed');
+                    isClosed = false;
+                } else {
+                    overlay.show();
+                    trigger.removeClass('is-closed');
+                    trigger.addClass('is-open');
+                    isClosed = true;
+                }
+            }
+
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('#wrapper').toggleClass('toggled');
+            });
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="..\Content\navbar.css" />
+</head>
+<body>
+    <form id="wrapper" runat="server">
+    <div class="overlay"></div>
+    <table class="MasterTable">
+        <colgroup>
+            <col style="width:20%" />
+            <col style="width:80%" />
+        </colgroup>
+        <tr>
+            <td colspan="2">
+                <div class="header">
+                    <asp:Label ID="lblTitle" runat="server" Text=""></asp:Label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+                    <ul class="nav sidebar-nav">
+                        <li class="sidebar-brand">
+                            <a href="#">
+                               Bootstrap 3
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-folder"></i> Page one</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-file-o"></i> Second page</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-cog"></i> Third page</a>
+                        </li>
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-fw fa-plus"></i> Dropdown <span class="caret"></span></a>
+                          <ul class="dropdown-menu" role="menu">
+                            <li class="dropdown-header">Dropdown heading</li>
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li><a href="#">Separated link</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-bank"></i> Page four</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-dropbox"></i> Page 5</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-twitter"></i> Last page</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="sidebar">
+                    <asp:Menu ID="MainMenu" runat="server">
+                        <Items>
+                            <asp:MenuItem Text="New Item" Value="New Item"></asp:MenuItem>
+                            <asp:MenuItem Text="New Item1" Value="New Item1"></asp:MenuItem>
+                            <asp:MenuItem Text="New Item2" Value="New Item2"></asp:MenuItem>
+                            <asp:MenuItem Text="New Item3" Value="New Item3"></asp:MenuItem>
+                            <asp:MenuItem Text="New Item4" Value="New Item4"></asp:MenuItem>
+                        </Items>
+                    </asp:Menu>
+                </div>
+            </td>
+            <td>
+                <div>
+                    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+                    </asp:ContentPlaceHolder>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

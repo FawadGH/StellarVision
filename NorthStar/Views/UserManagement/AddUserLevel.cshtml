@@ -1,0 +1,140 @@
+﻿@model PTSS.Application.SMSCore.Models.UserLevelModel
+@{
+    ViewBag.Title = "AddUserLevel";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("AddUserLevel", "UserManagement", FormMethod.Post, new { @class = "form-horizontal", role="form" }))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label>User Types</label>
+        </div>
+        <div class="col-sm-9">
+            @{ 
+                htmlAttributes.Clear();
+                htmlAttributes.Add("id", "UserType");
+                htmlAttributes.Add("class", "form-control margin-bottom");
+            }
+            @Html.DropDownListFor(x => x.UserTypeID, Model.UserTypeList, "Select User Type", htmlAttributes)
+        </div>
+        <div class="col-sm-2">
+            <label>User Level Name</label>
+        </div>
+        <div class="col-sm-9">
+            @{
+                htmlAttributes.Clear();
+                htmlAttributes.Add("placeholder", "New User Level");
+                htmlAttributes.Add("type", "text");
+                htmlAttributes.Add("class", "form-control margin-bottom");
+                htmlAttributes.Add("id", "UserLevelName");
+            }
+            @Html.TextBoxFor(x => x.UserLevelName, htmlAttributes)
+        </div>
+        <div class="col-sm-2">
+            <input type="button" class="btn btn-default" value="Add User Level" id="addUserLevel" onclick="AddUserLevel()" />
+        </div>
+    </div>
+}
+<script>
+    $.ajax({
+        type: 'post',
+        dataType: 'json',
+        cache: false,
+        url: '/UserManagement/AddUserLevel',
+        data: JSON.stringify(model),
+        contentType: "application/json",
+        success: function (response) {
+            $('#successDiv').show();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert('Error - ' + errorThrown);
+            $('#errorDiv').show();
+        }
+    });
+    
+</script>
+
+<script type="text/javascript">
+
+    function AddUserLevel() {
+        $('#successDiv').hide();
+        $('#errorDiv').hide();
+        var validate = Validate();
+        //alert('Validate complete');
+        //alert($("#UserLevelName").val());
+        //alert($("#UserType").val());
+        if (validate) {
+            //alert('Calling Ajax');
+            //var URL = '/UserManagement/AddUserLevel';
+            //var model = '@Html.Raw(Json.Encode(Model))';
+            //var model = $('form').serializeObject();
+            var model = {
+                    "UserLevelName":$("#UserLevelName").val(),
+                    "UserTypeID":$("#UserType").val()
+            };
+            //alert(JSON.stringify(model));
+            var URL = '@Url.Action("AddUserLevel", "UserManagement")';
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                cache: false,
+                async: false,
+                url: URL,
+                data: JSON.stringify(model),
+                contentType: "application/json",
+                complete: function() {
+                    //alert('Complete');
+                    //$('#successDiv').show();
+                },
+                success: function (response) {
+                    if (response.success)
+                    {
+                        $('#SuccessMessageDiv').html(response.ResponseMessage);
+                        $('#successDiv').show();
+                    }
+                    else
+                    {
+                        $('#ErrorMessageDiv').html(response.ResponseMessage);
+                        $('#errorDiv').show();
+                    }
+                },
+                error: function (data, response) {
+                    //alert('Error - ' + errorThrown);
+                    //alert('Error');
+                    $('#ErrorMessageDiv').html(response.ResponseMessage);
+                    $('#errorDiv').show();
+                }
+            });
+            //alert('Ajax Done');
+        }
+        else {
+            alert('Ajax Skipped');
+            return false;
+        }
+    }
+
+    function Validate() {
+        //alert('called');
+        var userType = $("#UserType");
+        var userLevelName = $("#UserLevelName");
+        //alert(userType.length);
+        if (userType.length < 1)
+        {
+            //alert('User Type required');
+            $('#errorDiv').show();
+            return false;
+        }
+        //alert(userLevelName.length);
+        if (userLevelName.length < 1)
+        {
+            //alert('User Level required');
+            $('#errorDiv').show();
+            return false;
+        }
+        return true;
+    }
+</script>

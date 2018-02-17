@@ -1,0 +1,68 @@
+﻿@model PTSS.Application.SMSCore.Models.UserTypeModel
+@{
+    ViewBag.Title = "AddUserType";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Dictionary<string, object> htmlAttributes = new Dictionary<string, object>();
+}
+
+@using (Html.BeginForm("AddUserType", "UserManagement", FormMethod.Post, new { id = "AddUserType" }))
+{
+    @RenderPage("~/Views/Shared/_ResponseMessage.cshtml")
+
+    <div class="form-group">
+        <div class="col-sm-2">
+            <label>User Type Name</label>
+        </div>
+        <div class="col-sm-9">
+            @{
+                htmlAttributes.Clear();
+                htmlAttributes.Add("placeholder", "New User Type");
+                htmlAttributes.Add("type", "text");
+                htmlAttributes.Add("class", "form-control");
+                htmlAttributes.Add("id", "UserTypeName");
+            }
+            @Html.TextBoxFor(x => x.UserTypeName, htmlAttributes)
+        </div>
+        <br />
+        <div class="col-sm-2">
+            <input type="button" class="btn btn-default" value="Add User Type" id="addUserType" onclick="AddUserType()" />
+        </div>
+        <br />
+        <div>
+            @Html.DisplayFor(x => x.UserTypeName)
+        </div>
+        <br />
+    </div>
+}
+<script type="text/javascript">
+    function AddUserType() {
+        $('#successDiv').hide();
+        $('#errorDiv').hide();
+        var URL = '@Url.Action("AddUserType","UserManagement")';
+        var model = {
+            "UserTypeName" : $('#UserTypeName').val()
+        }
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            cache: false,
+            async: false,
+            data: JSON.stringify(model),
+            contentType: 'application/json',
+            success: function (response) {
+                if (response.success) {
+                    $('#SuccessMessageDiv').html(response.ResponseMessage);
+                    $('#successDiv').show();
+                }
+                else {
+                    $('#ErrorMessageDiv').html(response.ResponseMessage);
+                    $('#errorDiv').show();
+                }
+            },
+            error: function (data, response) {
+                $('#ErrorMessageDiv').html(response.ResponseMessage);
+                $('#errorDiv').show();
+            }
+        });
+    }
+</script>
