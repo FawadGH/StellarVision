@@ -73,7 +73,8 @@ namespace PTSS.Application.SMSCore.DataAccess
             string sFunctionName = "getConnectionString()";
             try
             {
-                this.sConnectionString = oSecurity.sDecrypt(ConfigurationManager.ConnectionStrings[DataAccessConstants.WebConstants.SMSCoreDBConName].ToString());
+                //this.sConnectionString = oSecurity.sDecrypt(ConfigurationManager.ConnectionStrings[DataAccessConstants.WebConstants.SMSCoreDBConName].ToString());
+                this.sConnectionString = ConfigurationManager.ConnectionStrings[DataAccessConstants.WebConstants.SMSCoreDBConName].ToString();
                 #region Text Logging
                 oLog.Log(
                     sClassName,
